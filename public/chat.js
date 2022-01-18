@@ -22,51 +22,53 @@ joinButton.addEventListener('click', function(){
 socket.on("created", function(){
     creator = true;
     console.log("about to getUserMedia");
-    navigator.getUserMedia(
+    navigator.mediaDevices.getUserMedia(
     {
             audio: false,
             video: { width: 1280, height: 720 }
-    }    
-    , 
+    }).then(
+        function(stream){
+            divVideoChatLobby.style ="display:none"
+            userVideo.srcObject = stream ;
+            userVideo.onloadedmetadata = function(e){
+                userVideo.play();
+            }
     
-    function(stream){
-        divVideoChatLobby.style ="display:none"
-        userVideo.srcObject = stream ;
-        userVideo.onloadedmetadata = function(e){
-            userVideo.play();
+        }
+    ).catch(
+        function(err){
+            console.log("could not access usermedia", err)
+            alert("could not access usermedia", err)
         }
 
-    }, 
+    )    
     
-    function(err){
-        console.log("could not access usermedia", err)
-        alert("could not access usermedia", err)
-    });
+ 
 });
 
 socket.on("joined", function(){
     creator = false;
     console.log("about to getUserMedia");
-    navigator.getUserMedia(
-    {
-            audio: false,
-            video: { width: 1280, height: 720 }
-    }    
-    , 
+    navigator.mediaDevices.getUserMedia(
+        {
+                audio: false,
+                video: { width: 1280, height: 720 }
+        }).then(
+            function(stream){
+                divVideoChatLobby.style ="display:none"
+                userVideo.srcObject = stream ;
+                userVideo.onloadedmetadata = function(e){
+                    userVideo.play();
+                }
+        
+            }
+        ).catch(
+            function(err){
+                console.log("could not access usermedia", err)
+                alert("could not access usermedia", err)
+            }
     
-    function(stream){
-        divVideoChatLobby.style ="display:none"
-        userVideo.srcObject = stream ;
-        userVideo.onloadedmetadata = function(e){
-            userVideo.play();
-        }
-
-    }, 
-    
-    function(err){
-        console.log("could not access usermedia", err)
-        alert("could not access usermedia", err)
-    });
+        ) 
 });
 
 socket.on("full", function(){
