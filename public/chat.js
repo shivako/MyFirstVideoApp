@@ -1,3 +1,4 @@
+var socket = io.connect("")
 var divVideoChatLobby = document.getElementById("video-chat-lobby")
 var roomName = document.getElementById("roomName")
 var joinButton = document.getElementById("join")
@@ -9,19 +10,22 @@ joinButton.addEventListener('click', function(){
     if (roomName.value == ""){
         alert("Please enter Room Name")
     }else{
+        socket.emit("join", roomName.value)
         console.log("about to getUserMedia")
         navigator.getUserMedia(
         {
-                audio: true,
+                audio: false,
                 video: { width: 1280, height: 720 }
         }    
         , 
         
         function(stream){
+            divVideoChatLobby.style ="display:none"
             userVideo.srcObject = stream ;
             userVideo.onloadedmetadata = function(e){
-                userVideo.onplay();
+                userVideo.play();
             }
+
         }, 
         
         function(err){
